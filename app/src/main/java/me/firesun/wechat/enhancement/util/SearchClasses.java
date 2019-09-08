@@ -207,7 +207,7 @@ public class SearchClasses {
             //发送消息类查找
             for (String item : wxClasses
             ) {
-                if (item.indexOf("ui.") > 0) {
+                if (item.indexOf("ui.chatting") > 0) {
                     XposedBridge.log("ui类：" + item);
                 }
             }
