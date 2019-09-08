@@ -204,19 +204,12 @@ public class SearchClasses {
 
         //Chatting class
         try {
-            //发送消息类查找
-            for (String item : wxClasses
-            ) {
-                if (item.indexOf("ui.chatting") > 0) {
-                    XposedBridge.log("ui类：" + item);
-                }
-            }
-            Class ChattingClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.ui.chatting", 1)
+            Class ChattingClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.ui.chatting", 0)
                     .filterByField("android.media.ToneGenerator")
                     .filterByField("android.os.Vibrator")
                     .firstOrNull();
             hp.ChattingClass = ChattingClass;
-            XposedBridge.log("查找聊天构造类：" + new Gson().toJson(hp.ChattingClassName));
+            XposedBridge.log("查找聊天构造类：" + new Gson().toJson(ChattingClass));
             hp.ChattingClassName = ChattingClass.getName();
             XposedBridge.log("查找聊天构造类名：" + hp.ChattingClassName);
             hp.ChattingTxtMethod = ReflectionUtil.findMethodsByExactParameters(ChattingClass, boolean.class, String.class).getName();
