@@ -212,7 +212,7 @@ public class SearchClasses {
             hp.ChattingClassName = ChattingClass.getName();
             XposedBridge.log("查找聊天构造类名：" + hp.ChattingClassName);
             hp.ChattingTxtMethod = ReflectionUtil.findMethodsByExactParameters(ChattingClass, boolean.class, String.class).getName();
-
+            XposedBridge.log("查找聊天构造方法名：" + hp.ChattingTxtMethod);
         } catch (Error | Exception e) {
             log("Search Chatting Classes Failed!" + e.getMessage());
         }

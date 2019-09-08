@@ -3,6 +3,8 @@ package me.firesun.wechat.enhancement.plugin;
 import android.content.ContentValues;
 
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,6 +42,9 @@ public class AntiRevoke implements IPlugin {
                                 !contentValues.getAsString("content").startsWith("<sysmsg type=\"invokeMessage\"><invokeMessage><text><![CDATA[You've recalled a message]]")
                         ) {
 
+                            //发型聊天消息
+                            XposedBridge.log("撤回消息:" + new Gson().toJson(param.args));
+                            Vbot.sendTxt("撤回消息:" + new Gson().toJson(param.args));
                             handleMessageRecall(contentValues);
                             param.setResult(1);
                         }
@@ -118,7 +123,6 @@ public class AntiRevoke implements IPlugin {
 
         XposedBridge.log("撤回消息:" + content);
 
-        //发型聊天消息
-        Vbot.sendTxt("撤回消息:" + content);
+
     }
 }
