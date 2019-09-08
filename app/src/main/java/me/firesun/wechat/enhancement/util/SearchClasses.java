@@ -209,7 +209,6 @@ public class SearchClasses {
                     .filterByField("android.os.Vibrator")
                     .firstOrNull();
             hp.ChattingClass = ChattingClass;
-            XposedBridge.log("查找聊天构造类：" + new Gson().toJson(ChattingClass));
             hp.ChattingClassName = ChattingClass.getName();
             XposedBridge.log("查找聊天构造类名：" + hp.ChattingClassName);
             hp.ChattingTxtMethod = ReflectionUtil.findMethodsByExactParameters(ChattingClass, boolean.class, String.class).getName();
