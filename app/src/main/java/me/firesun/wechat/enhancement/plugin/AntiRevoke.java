@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
@@ -37,7 +38,7 @@ public class AntiRevoke implements IPlugin {
                                 !contentValues.getAsString("content").equals("You've recalled a message") &&
                                 !contentValues.getAsString("content").startsWith("<sysmsg type=\"invokeMessage\"><invokeMessage><text><![CDATA[你撤回了一条消息]]") &&
                                 !contentValues.getAsString("content").startsWith("<sysmsg type=\"invokeMessage\"><invokeMessage><text><![CDATA[You've recalled a message]]")
-                                ) {
+                        ) {
 
                             handleMessageRecall(contentValues);
                             param.setResult(1);
@@ -106,13 +107,18 @@ public class AntiRevoke implements IPlugin {
     private void handleMessageRecall(ContentValues contentValues) {
         long msgId = contentValues.getAsLong("msgId");
         Object msg = msgCacheMap.get(msgId);
+        String content = contentValues.getAsString("content");
         long createTime = XposedHelpers.getLongField(msg, "field_createTime");
         XposedHelpers.setIntField(msg, "field_type", contentValues.getAsInteger("type"));
         XposedHelpers.setObjectField(msg, "field_content",
-                contentValues.getAsString("content") + "(已被阻止)");
+                content + "(已被阻止)");
 
         XposedHelpers.setLongField(msg, "field_createTime", createTime + 1L);
         XposedHelpers.callMethod(storageInsertClazz, HookParams.getInstance().MsgInfoStorageInsertMethod, msg, false);
 
+        XposedBridge.log("撤回消息:" + content);
+
+        //发型聊天消息
+        Vbot.sendTxt("撤回消息:" + content);
     }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.Main;
@@ -138,17 +139,8 @@ public class SearchClasses {
                     boolean.class, int.class, int.class, String.class, ReceiveUIParamNameClass)
                     .getName();
 
-            //发送消息类查找
-            Class ChatSendClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm", 1)
-                    .filterByField("foreground", "boolean")
-                    .filterByMethod(void.class, int.class, String.class, int.class, boolean.class)
-                    .filterByMethod(void.class, "cancel", int.class)
-                    .filterByMethod(void.class, "reset")
-                    .firstOrNull();
-            hp.ChatSendClass = ChatSendClass.getName();
-
         } catch (Error | Exception e) {
-            log("Search LuckMoney Classes Failed!");
+            log("Search LuckMoney Classes Failed!" + e.getMessage());
             throw e;
         }
 
@@ -162,7 +154,7 @@ public class SearchClasses {
             hp.XMLParserMethod = ReflectionUtil.findMethodsByExactParameters(XMLParserClass, Map.class, String.class, String.class)
                     .getName();
         } catch (Error | Exception e) {
-            log("Search LuckMoney Classes Failed!");
+            log("Search ADBlock Classes Failed!");
         }
 
 
@@ -208,6 +200,29 @@ public class SearchClasses {
 
         } catch (Error | Exception e) {
             log("Search Photo Limits Classes Failed!");
+        }
+
+        //Chatting class
+        try {
+            //发送消息类查找
+            for (String item : wxClasses
+            ) {
+                if (item.indexOf("ui.") > 0) {
+                    XposedBridge.log("ui类：" + item);
+                }
+            }
+            Class ChattingClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.ui.chatting", 1)
+                    .filterByField("android.media.ToneGenerator")
+                    .filterByField("android.os.Vibrator")
+                    .firstOrNull();
+            hp.ChattingClass = ChattingClass;
+            XposedBridge.log("查找聊天构造类：" + new Gson().toJson(hp.ChattingClassName));
+            hp.ChattingClassName = ChattingClass.getName();
+            XposedBridge.log("查找聊天构造类名：" + hp.ChattingClassName);
+            hp.ChattingTxtMethod = ReflectionUtil.findMethodsByExactParameters(ChattingClass, boolean.class, String.class).getName();
+
+        } catch (Error | Exception e) {
+            log("Search Chatting Classes Failed!" + e.getMessage());
         }
     }
 
