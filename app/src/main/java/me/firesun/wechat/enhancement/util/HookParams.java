@@ -36,6 +36,7 @@ public class HookParams {
     public String ReceiveLuckyMoneyRequestMethod;
     public String LuckyMoneyRequestClassName;
     public String GetTransferRequestClassName;
+    public String ChatSendClass;
     public boolean hasTimingIdentifier = true;
     public String versionName;
     public int versionCode;

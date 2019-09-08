@@ -138,6 +138,15 @@ public class SearchClasses {
                     boolean.class, int.class, int.class, String.class, ReceiveUIParamNameClass)
                     .getName();
 
+            //发送消息类查找
+            Class ChatSendClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm", 1)
+                    .filterByField("foreground", "boolean")
+                    .filterByMethod(void.class, int.class, String.class, int.class, boolean.class)
+                    .filterByMethod(void.class, "cancel", int.class)
+                    .filterByMethod(void.class, "reset")
+                    .firstOrNull();
+            hp.ChatSendClass = ChatSendClass.getName();
+
         } catch (Error | Exception e) {
             log("Search LuckMoney Classes Failed!");
             throw e;
